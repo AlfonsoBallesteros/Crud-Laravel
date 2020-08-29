@@ -60,4 +60,10 @@ class ClientController extends Controller
 
         return redirect('/clients')->with('success', 'Update Succesfully');
     }
+
+    public function destroy($id)
+    {
+        Client::where('id',$id)->delete();
+        return redirect('/clients')->with('success','Delete Successfully');
+    }
 }

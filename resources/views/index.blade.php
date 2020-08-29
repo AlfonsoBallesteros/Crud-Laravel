@@ -15,7 +15,7 @@
                 <th>EMAIL</th>
                 <th>PHONE</th>
 
-                <th>ACTION</th>
+                <th colspan = 2>ACTION</th>
             </thead>
 
             <tbody>
@@ -29,6 +29,11 @@
 
                     <td>
                         <a href="{{ route('clients.edit', $row->id)}}" class="btn btn-warning">Edit</a>
+                        
+                        <form action="{{ route('clients.destroy', $row->id)}}" method="post" class="mt-2">
+                            @csrf @method('DELETE')
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 @endforeach
