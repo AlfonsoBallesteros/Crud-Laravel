@@ -2,7 +2,17 @@
 
 @section('content')
     {!! Form::open(['action' =>['ClientController@update',$data->id], 'method' => 'PUT','files'=>true])!!}
-    
+		@if ($errors->any())
+    	<div class="col-md-12 mt-2">
+     		<div class="alert alert-danger">
+            	<ul>
+                	@foreach ($errors->all() as $error)
+                    	<li>{{ $error }}</li>
+                	@endforeach
+            	</ul>
+        	</div>
+    	</div>
+		@endif
         <div class="col-md-6">  
 
             

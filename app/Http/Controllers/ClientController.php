@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use App\Http\Requests;
+use App\Http\Requests\ClientRequest;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -19,15 +20,16 @@ class ClientController extends Controller
         return view('create');
     }
 
-    public function store(Request $request)
+    public function store(ClientRequest $request)
     {
+        /*
         $request->validate([
             'name'=>'required',
             'email'=>'required|email',
             'phone'=>'required'
-        ]); 
+        ]); */
         Client::create($request->all());
-        return redirect('/clients')->with('success', 'Create Succesfully');
+        return redirect()->route('clients.create')->with('success', 'Create Succesfully');
     }
     
     public function edit($id)
@@ -42,19 +44,20 @@ class ClientController extends Controller
         return view('edit', compact(['data']));
     }
 
-    public function update(Request $request, $id)
+    public function update(ClientRequest $request, $id)
     {
+        /*
         $request->validate([
             'name'=>'required',
             'email'=>'required|email',
             'phone'=>'required'
-        ]); 
+        ]); */
         
         $cliente = Client::find($id);
         $cliente->name = $request->get('name');
         $cliente->email = $request->get('email');
         $cliente->phone = $request->get('phone');
-        $cliente->save();
+        $cliente->update();
         
         //Client::where('id', $id)->update($request->all());
 
