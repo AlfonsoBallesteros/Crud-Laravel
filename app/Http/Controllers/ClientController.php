@@ -6,18 +6,37 @@ use App\Client;
 use App\Http\Requests;
 use App\Http\Requests\ClientRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
+use App\Http\Controllers\SkillController;
+use App\Skill;
 
 class ClientController extends Controller
 {
     public function index()
     {
-        $data= Client::orderBy('id', 'desc')->paginate(10)->setPath('clients');
-        return view('index', compact(['data']));
+        $data= Client::select('clients.id','clients.name', 'clients.email', 'clients.phone', 'skills.name as skill', 'skills.tecno');
+        $data = $data->join('skills', 'skills.id', '=', 'clients.id_skill')
+                    ->get();
+                        
+        //orderBy('id', 'desc')->paginate(10)->setPath('clients'); 
+        /*$clients=DB::table('clients')->get();
+        foreach ($clients as $client)
+        {
+           $data[]=[
+            'id'=>$client->id,
+            'name'=>Crypt::decrypt($client->name),
+            'email'=>Crypt::decrypt($client->email),
+            'phone'=>($client->phone)
+           ];
+        }*/
+        return view('index', compact(['data']));//($data);//
     }
 
     public function create()
     {
-        return view('create');
+        $skill = Skill::pluck('name','id');//select('id','name')->get();
+        return view('create', compact(['skill']));
     }
 
     public function store(ClientRequest $request)
@@ -28,8 +47,8 @@ class ClientController extends Controller
             'email'=>'required|email',
             'phone'=>'required'
         ]); */
-        Client::create($request->all());
-        return redirect()->route('clients.create')->with('success', 'Create Succesfully');
+        $client = Client::create($request->all());
+        return ($client);//redirect()->route('clients.create')->with('success', 'Create Succesfully');
     }
     
     public function edit($id)

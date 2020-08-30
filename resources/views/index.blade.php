@@ -14,7 +14,8 @@
                 <th>NAME</th>
                 <th>EMAIL</th>
                 <th>PHONE</th>
-
+                <th>Skill</th>
+                <th>Tecnologia</th>
                 <th colspan = 2>ACTION</th>
             </thead>
 
@@ -26,6 +27,8 @@
                     <td>{{$row->name }}</td>
                     <td>{{$row->email }}</td>
                     <td>{{$row->phone }}</td>
+                    <td>{{$row->skill }}</td>
+                    <td>{{$row->tecno }}</td>
 
                     <td>
                         <a href="{{ route('clients.edit', $row->id)}}" class="btn btn-warning">Edit</a>
@@ -43,9 +46,6 @@
        <a class="btn btn-primary btn-lg btn-block" href="{{ route('clients.create')}}">Crear Cliente</a>
     </div>
     <div>
-    <?php
-    echo $data->render();
-    ?>
     </div>
 </div>
 

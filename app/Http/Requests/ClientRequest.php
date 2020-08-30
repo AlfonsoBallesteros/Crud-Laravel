@@ -26,7 +26,8 @@ class ClientRequest extends FormRequest
         return [
             'name'=>'required',
             'email'=>'required|email',
-            'phone'=>'required|max:11'
+            'phone'=>'required|max:11',
+            'id_skill'=>'required'
         ];
     }
 
@@ -40,6 +41,8 @@ class ClientRequest extends FormRequest
 
             'phone.required'   => 'El Telefono es obligatorio.',
             'phone.max'   => 'El Telefono no puede ser mayor a 11.',
+
+            'id_skill.required' => 'el skill es obligatorio'
         ];
     }
 }

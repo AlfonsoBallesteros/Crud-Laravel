@@ -17,3 +17,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::resource('clients','ClientController');
+
+Route::resource('skills', 'SkillController');
