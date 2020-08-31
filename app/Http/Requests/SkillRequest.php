@@ -24,7 +24,17 @@ class SkillRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'=>'required',
+            'tecno'=>'required'
+        ];
+    }
+    public function messages()
+    {
+        return [
+            
+            'name.required'   => 'El nombre es obligatorio.',
+
+            'tecno.required'   => 'La Tecnologia es obligatorio.',
         ];
     }
 }

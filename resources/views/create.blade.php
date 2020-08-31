@@ -59,7 +59,17 @@
      				</small>
 				@endif
 			</div>
-   
+
+			<div class="form-group">
+				{!! Form::label('Avatar') !!}
+				{!! Form::file('avatar', ["class"=>"form-control"]) !!}
+				
+				@if ($errors->has('id_skill'))
+    				<small class="form-text text-danger">
+        				{{ $errors->first('id_skill') }}
+     				</small>
+				@endif
+			</div>
         <div class="well well-sm clearfix">
             <button class="btn btn-success pull-right" title="Save" type="submit">Create</button>
         </div>

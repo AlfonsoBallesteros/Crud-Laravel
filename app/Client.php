@@ -10,11 +10,12 @@ class Client extends Model
     use Encryptable;
     
     protected $encryptable = [
-        'name', 'email',
+        'avatar','nombre', 'email', 'phone'  
     ];
 
     protected $fillable = [
-        'name',
+        'avatar',
+        'nombre',
         'email',
         'phone',
         'id_skill'  

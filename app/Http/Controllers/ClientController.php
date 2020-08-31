@@ -15,9 +15,9 @@ class ClientController extends Controller
 {
     public function index()
     {
-        $data= Client::select('clients.id','clients.name', 'clients.email', 'clients.phone', 'skills.name as skill', 'skills.tecno');
-        $data = $data->join('skills', 'skills.id', '=', 'clients.id_skill')
-                    ->get();
+        $data= Client::select('clients.id','clients.avatar','clients.nombre', 'clients.email', 'clients.phone', 'skills.name')
+                        ->join('skills', 'skills.id', '=', 'clients.id_skill')
+                        ->get();
                         
         //orderBy('id', 'desc')->paginate(10)->setPath('clients'); 
         /*$clients=DB::table('clients')->get();
@@ -34,7 +34,7 @@ class ClientController extends Controller
     }
 
     public function create()
-    {
+    {   
         $skill = Skill::pluck('name','id');//select('id','name')->get();
         return view('create', compact(['skill']));
     }
@@ -47,8 +47,25 @@ class ClientController extends Controller
             'email'=>'required|email',
             'phone'=>'required'
         ]); */
-        $client = Client::create($request->all());
-        return ($client);//redirect()->route('clients.create')->with('success', 'Create Succesfully');
+        //$client = Client::create($request->all());
+        $client = new Client;
+        $id = substr(md5(time()), 0, 16);
+        if($request->file()){
+            $fileName = 'profile_'.$id.'_'.$request->file('avatar')->getClientOriginalName();
+            $filePath = $request->file('avatar')->storeAs('images', $fileName, 'public');
+            
+            $client->avatar =  $fileName;//'/storage/' . $filePath;
+            $client->nombre = $request->name;
+            $client->email = $request->email;
+            $client->phone = $request->phone;
+            $client->id_skill = $request->id_skill;
+            $client->save();
+            return redirect()->route('clients.create')->with('success', 'Create Succesfully');
+            //dd($request->file('avatar')->getClientOriginalName());
+        }else{
+            return redirect()->route('clients.create')->with('warning', 'error file Succesfully');
+        }
+        //$request->avatar->store('images');
     }
     
     public function edit($id)

@@ -9,26 +9,24 @@
     <div class="table-responsive mt-4">
         <table class="table table-bordered table-condensed table-striped">
             <thead>
-
+                <th>Avatar</th>
                 <th>ID</th>
                 <th>NAME</th>
                 <th>EMAIL</th>
                 <th>PHONE</th>
                 <th>Skill</th>
-                <th>Tecnologia</th>
                 <th colspan = 2>ACTION</th>
             </thead>
 
             <tbody>
                 @foreach($data as $row)
                 <tr>
-
+                    <td><img src="{{asset('/storage/images/'.$row->avatar)}}" class="rounded mx-auto d-block" alt="..." style="width:50px; height:50px;"></td>
                     <td>{{$row->id }}</td>
-                    <td>{{$row->name }}</td>
+                    <td>{{$row->nombre }}</td>
                     <td>{{$row->email }}</td>
                     <td>{{$row->phone }}</td>
-                    <td>{{$row->skill }}</td>
-                    <td>{{$row->tecno }}</td>
+                    <td>{{$row->name }}</td>
 
                     <td>
                         <a href="{{ route('clients.edit', $row->id)}}" class="btn btn-warning">Edit</a>

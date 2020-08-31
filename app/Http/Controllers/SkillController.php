@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\SkillRequest;
 use App\Http\Requests;
 use App\Skill;
 
@@ -19,13 +20,13 @@ class SkillController extends Controller
         return view('createskill');
     }
 
-    public function store(Request $request)
+    public function store(SkillRequest $request)
     {
-        $request->validate([
-            'name'=>'required',
-            'tecno'=>'required',
-        ]);
-        Skill::create($request->all());
-        return redirect()->route('skills.create')->with('success', 'Create Succesfully');
+        
+        $skill = new Skill;
+        $skill->name = ($request->name . " - " . $request->tecno);
+        $skill->save();
+        //Skill::create($request->all());
+        return redirect()->route('skills.create')->with('success', 'Create Succesfully');//($skill);
     }
 }
