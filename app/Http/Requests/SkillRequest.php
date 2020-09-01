@@ -13,7 +13,7 @@ class SkillRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +25,7 @@ class SkillRequest extends FormRequest
     {
         return [
             'name'=>'required',
-            'tecno'=>'required'
+            //'tecno'=>'required'
         ];
     }
     public function messages()
@@ -34,7 +34,7 @@ class SkillRequest extends FormRequest
             
             'name.required'   => 'El nombre es obligatorio.',
 
-            'tecno.required'   => 'La Tecnologia es obligatorio.',
+            //'tecno.required'   => 'La Tecnologia es obligatorio.',
         ];
     }
 }

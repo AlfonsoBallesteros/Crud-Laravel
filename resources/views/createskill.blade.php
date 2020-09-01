@@ -1,6 +1,6 @@
 @extends('layout')
 @section('content')
-{!! Form::open(['action' =>'SkillController@store', 'method' => 'POST','files'=>true])!!}
+{!! Form::open(['url' =>'/skills', 'method' => 'POST', 'files'=>true])!!}
 	@if (session('success'))
     <div class="alert alert-success mt-2 mb-2">
         {{ session('success') }}

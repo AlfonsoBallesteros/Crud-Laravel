@@ -24,7 +24,7 @@ class ClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'avatar'=>'required',
+            'avatar'=>'mimes:png,jpeg|max:2048',
             'name'=>'required',
             'email'=>'required|email',
             'phone'=>'required|max:11',
@@ -35,8 +35,10 @@ class ClientRequest extends FormRequest
     public function messages()
     {
         return [
-            'avatar.required' => 'la imagen es requerida',
 
+            'avatar.mimes' => 'Se requiere una imagen',
+            'avatar.max' => 'La imagen es muy grande',
+            
             'name.required'   => 'El name es obligatorio.',
 
             'email.required'    => 'El email es obligatorio.',

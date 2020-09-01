@@ -23,10 +23,15 @@ class SkillController extends Controller
     public function store(SkillRequest $request)
     {
         
-        $skill = new Skill;
-        $skill->name = ($request->name . " - " . $request->tecno);
-        $skill->save();
-        //Skill::create($request->all());
-        return redirect()->route('skills.create')->with('success', 'Create Succesfully');//($skill);
+        $skill = new Skill();
+        $skill->name = e($request->input('name'). " - " . $request->input('tecno')); //. " - " . $request->tecno);
+        
+        if($skill->save()){
+            return redirect()->route('skills.create')->with('success', 'Create Succesfully');
+        }else{
+            return redirect()->route('skills.create')->with('warning', 'Fail');
+        }
+        //Skill::create($request->all()); ($skill);
+        //($skill);
     }
 }

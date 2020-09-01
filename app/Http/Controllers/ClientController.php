@@ -8,6 +8,7 @@ use App\Http\Requests\ClientRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\SkillController;
 use App\Skill;
 
@@ -51,7 +52,7 @@ class ClientController extends Controller
         //$client = Client::create($request->all());
         $client = new Client();
         
-        if($request->file()){
+        if($request->hasFile('avatar')){
             //'/storage/' . $filePath;
             //dd($request->file('avatar')->getClientOriginalName());
             $fileName = $this->UploadFile($request);
@@ -63,12 +64,12 @@ class ClientController extends Controller
             if($client->save()){
                 return redirect()->route('clients.create')->with('success', 'Create Succesfully');
             }else{
-                return redirect()->route('clients.create')->with('warning', 'error save File');
+                return redirect()->route('clients.create')->with('warning', 'Error Save Data');
             }
             
             //return ($fileName);
         }else{
-            return redirect()->route('clients.create')->with('warning', 'error file Fail');
+            return redirect()->route('clients.create')->with('warning', 'Error Image Fail');
         }
         //$request->avatar->store('images');
     }
@@ -96,9 +97,16 @@ class ClientController extends Controller
         ]); */
         
         $cliente = Client::find($id);
-        $cliente->name = $request->input('name');
-        $cliente->email = $request->input('email');
-        $cliente->phone = $request->input('phone');
+        if($request->hasFile('avatar')){
+            Storage::disk('public')->delete('images/'.$cliente->avatar);
+            $fileName = $this->UploadFile($request);
+            $cliente->avatar =  $fileName;
+        }
+        $cliente->nombre = e($request->input('name'));
+        $cliente->email = e($request->input('email'));
+        $cliente->phone = e($request->input('phone'));
+        $cliente->id_skill = e($request->input('id_skill'));
+        
         $cliente->update();
         
         //Client::where('id', $id)->update($request->all());
@@ -115,8 +123,9 @@ class ClientController extends Controller
     public function UploadFile($request)
     {
         $id = substr(md5(time()), 0, 16);
-        $fileName = 'profile_'.$id.'_'.$request->file('avatar')->getClientOriginalName();
-        $filePath = $request->file('avatar')->storeAs('images', $fileName, 'public');
+        $img = e($request->file('avatar'));
+        $fileName = 'profile_'.$id.'_'.$img->getClientOriginalName();
+        $filePath = $img->storeAs('images', $fileName, 'public');
         return ($fileName);
     }
 }

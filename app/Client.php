@@ -10,7 +10,7 @@ class Client extends Model
     use Encryptable;
     
     protected $encryptable = [
-        'avatar','nombre', 'email', 'phone'  
+      'nombre', 'email', 'phone'  
     ];
 
     protected $fillable = [
