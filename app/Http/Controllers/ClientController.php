@@ -35,7 +35,8 @@ class ClientController extends Controller
 
     public function create()
     {   
-        $skill = Skill::pluck('name','id');//select('id','name')->get();
+        $skill = Skill::select('name','id')->get();
+        $skill = $skill->pluck('name','id');//select('id','name')->get();
         return view('create', compact(['skill']));
     }
 
@@ -48,30 +49,35 @@ class ClientController extends Controller
             'phone'=>'required'
         ]); */
         //$client = Client::create($request->all());
-        $client = new Client;
-        $id = substr(md5(time()), 0, 16);
+        $client = new Client();
+        
         if($request->file()){
-            $fileName = 'profile_'.$id.'_'.$request->file('avatar')->getClientOriginalName();
-            $filePath = $request->file('avatar')->storeAs('images', $fileName, 'public');
-            
-            $client->avatar =  $fileName;//'/storage/' . $filePath;
+            //'/storage/' . $filePath;
+            //dd($request->file('avatar')->getClientOriginalName());
+            $fileName = $this->UploadFile($request);
+            $client->avatar =  $fileName;
             $client->nombre = $request->name;
             $client->email = $request->email;
             $client->phone = $request->phone;
             $client->id_skill = $request->id_skill;
-            $client->save();
-            return redirect()->route('clients.create')->with('success', 'Create Succesfully');
-            //dd($request->file('avatar')->getClientOriginalName());
+            if($client->save()){
+                return redirect()->route('clients.create')->with('success', 'Create Succesfully');
+            }else{
+                return redirect()->route('clients.create')->with('warning', 'error save File');
+            }
+            
+            //return ($fileName);
         }else{
-            return redirect()->route('clients.create')->with('warning', 'error file Succesfully');
+            return redirect()->route('clients.create')->with('warning', 'error file Fail');
         }
         //$request->avatar->store('images');
     }
     
     public function edit($id)
-    {
+    {   
+        $skill = Skill::pluck('name','id');
         $data = Client::find($id);
-        return view('edit', compact(['data']));
+        return view('edit', compact(['data', 'skill']));
     }
 
     public function show($id)
@@ -90,9 +96,9 @@ class ClientController extends Controller
         ]); */
         
         $cliente = Client::find($id);
-        $cliente->name = $request->get('name');
-        $cliente->email = $request->get('email');
-        $cliente->phone = $request->get('phone');
+        $cliente->name = $request->input('name');
+        $cliente->email = $request->input('email');
+        $cliente->phone = $request->input('phone');
         $cliente->update();
         
         //Client::where('id', $id)->update($request->all());
@@ -104,5 +110,13 @@ class ClientController extends Controller
     {
         Client::where('id',$id)->delete();
         return redirect('/clients')->with('success','Delete Successfully');
+    }
+
+    public function UploadFile($request)
+    {
+        $id = substr(md5(time()), 0, 16);
+        $fileName = 'profile_'.$id.'_'.$request->file('avatar')->getClientOriginalName();
+        $filePath = $request->file('avatar')->storeAs('images', $fileName, 'public');
+        return ($fileName);
     }
 }
