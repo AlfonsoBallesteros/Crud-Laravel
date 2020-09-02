@@ -6,10 +6,10 @@ use App\Client;
 use App\Http\Requests;
 use App\Http\Requests\ClientRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\SkillController;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ClientMail;
 use App\Skill;
 
 class ClientController extends Controller
@@ -62,6 +62,7 @@ class ClientController extends Controller
             $client->phone = $request->phone;
             $client->id_skill = $request->id_skill;
             if($client->save()){
+                Mail::to($client->email)->send(new ClientMail($client));
                 return redirect()->route('clients.create')->with('success', 'Create Succesfully');
             }else{
                 return redirect()->route('clients.create')->with('warning', 'Error Save Data');
@@ -116,6 +117,7 @@ class ClientController extends Controller
 
     public function destroy($id)
     {
+        $this->DeleteImage($id);
         Client::where('id',$id)->delete();
         return redirect('/clients')->with('success','Delete Successfully');
     }
@@ -123,9 +125,15 @@ class ClientController extends Controller
     public function UploadFile($request)
     {
         $id = substr(md5(time()), 0, 16);
-        $img = e($request->file('avatar'));
+        $img = $request->file('avatar');
         $fileName = 'profile_'.$id.'_'.$img->getClientOriginalName();
         $filePath = $img->storeAs('images', $fileName, 'public');
         return ($fileName);
+    }
+
+    public function DeleteImage($id)
+    {
+        $cliente = Client::find($id);
+        Storage::disk('public')->delete('images/'.$cliente->avatar);
     }
 }

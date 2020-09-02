@@ -17,7 +17,7 @@ class SkillController extends Controller
     
     public function create()
     {
-        return view('createskill');
+        return view('createSkill');
     }
 
     public function store(SkillRequest $request)
