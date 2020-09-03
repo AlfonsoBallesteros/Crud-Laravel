@@ -1,25 +1,15 @@
-@component('mail::layout')
-    {{-- Header --}}
-    @slot('header')
-        @component('mail::header', ['url' => config('app.url')])
-            Header Title
-        @endcomponent
-    @endslot
+@component('mail::message')
 
-{{-- Body --}}
+    {{-- Body --}}
 
     # Correo!
     Enviado a {{ $client->email }}
-{{--   
+    Eveento el {{ $client->cita}}
+
+    {{--   
     @component('mail::button', ['url' => '', 'color' => 'success'])
             Enlace
     @endcomponent  
---}}
+    --}}
 
-{{-- Footer --}}
-    @slot('footer')
-        @component('mail::footer')
-            © {{ date('Y') }} {{ config('app.name') }}. Super FOOTER!
-        @endcomponent
-    @endslot
 @endcomponent

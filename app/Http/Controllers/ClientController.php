@@ -11,6 +11,7 @@ use App\Http\Controllers\SkillController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ClientMail;
 use App\Skill;
+use Carbon\Carbon;
 
 class ClientController extends Controller
 {
@@ -61,14 +62,13 @@ class ClientController extends Controller
             $client->email = $request->email;
             $client->phone = $request->phone;
             $client->id_skill = $request->id_skill;
+            $client->cita = $this->GenerateDate();
             if($client->save()){
-                Mail::to($client->email)->send(new ClientMail($client));
                 return redirect()->route('clients.create')->with('success', 'Create Succesfully');
             }else{
                 return redirect()->route('clients.create')->with('warning', 'Error Save Data');
             }
-            
-            //return ($fileName);
+            //retur n ($fileName);
         }else{
             return redirect()->route('clients.create')->with('warning', 'Error Image Fail');
         }
@@ -84,8 +84,11 @@ class ClientController extends Controller
 
     public function show($id)
     {
-        $data = Client::find($id);
-        return view('edit', compact(['data']));
+        $data = Client::select('clients.id','clients.avatar','clients.nombre', 'clients.email', 'clients.phone', 'skills.name', 'clients.cita')
+                        ->join('skills', 'skills.id', '=', 'clients.id_skill')
+                        ->where('clients.id', $id)
+                        ->get();
+        return view('show', compact(['data']));
     }
 
     public function update(ClientRequest $request, $id)
@@ -122,6 +125,19 @@ class ClientController extends Controller
         return redirect('/clients')->with('success','Delete Successfully');
     }
 
+    public function SendEmail($id)
+    {
+        $client = Client::select('clients.id','clients.avatar','clients.nombre', 'clients.email', 'clients.phone', 'skills.name', 'clients.cita')
+                        ->join('skills', 'skills.id', '=', 'clients.id_skill')
+                        ->where('clients.id', $id)
+                        ->get();
+
+        $data = $client[0];
+        
+        Mail::to($data->email)->send(new ClientMail($data));
+        return redirect('/clients')->with('success', 'Succesfully Revisa tu correo');
+    }
+
     public function UploadFile($request)
     {
         $id = substr(md5(time()), 0, 16);
@@ -135,5 +151,16 @@ class ClientController extends Controller
     {
         $cliente = Client::find($id);
         Storage::disk('public')->delete('images/'.$cliente->avatar);
+    }
+
+    public function GenerateDate()
+    {
+        
+        $month = 5;
+        $day = rand(1, 30);;
+        $hour = rand(6, 11);;
+
+        $date = Carbon::create('2020', $month, $day, $hour);
+        return ($date);
     }
 }

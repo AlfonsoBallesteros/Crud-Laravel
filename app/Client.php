@@ -18,6 +18,7 @@ class Client extends Model
         'nombre',
         'email',
         'phone',
-        'id_skill'  
+        'id_skill',
+        'cita'
     ];
 }
